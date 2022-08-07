@@ -1,22 +1,34 @@
+import throttle from 'lodash.throttle';
+
 const form = document.querySelector(`.feedback-form`);
-const textArea = document.querySelector(`textarea`);
-// console.log(form, textArea);
 
-form.addEventListener(`input`, onForm);
-textArea.addEventListener(`blur`, onTextArea);
+const STORAGE_KEY = 'feedback-form-state';
+const inputData = {};
 
-function onTextArea(event) {
-  //   const textInput = event.currentTarget.value;
-  //   localStorage.setItem(`feedback-form-state`, textInput);
-}
+form.addEventListener(`input`, throttle(onForm, 200));
+form.addEventListener('submit', formSubmit);
+
+refreshForm();
 
 function onForm(event) {
-  const curentValue = {
-    email: event.currentTarget.value,
-    message: event.currentTarget.value,
-  };
-  console.log(curentValue);
-  //   localStorage.setItem(`feedback-form-state`, JSON.stringify(curentValue));
-  // const textInput = event.currentTarget.value;
-  // localStorage.setItem(`text-area`, textInput);
+  event.preventDefault();
+  inputData[event.target.name] = event.target.value;
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(inputData));
+}
+
+function refreshForm(event) {
+  const refreshText = localStorage.getItem(STORAGE_KEY);
+  const parsedRefreshText = JSON.parse(refreshText);
+
+  if (parsedRefreshText) {
+    Object.entries(parsedRefreshText).forEach(([name, value]) => {
+      inputData[name] = value;
+      form.elements[name].value = value;
+    });
+  }
+}
+
+function formSubmit(event) {
+  event.preventDefault();
+  event.currentTarget.reset();
 }
