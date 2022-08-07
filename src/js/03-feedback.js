@@ -5,7 +5,7 @@ const form = document.querySelector(`.feedback-form`);
 const STORAGE_KEY = 'feedback-form-state';
 const inputData = {};
 
-form.addEventListener(`input`, throttle(onForm, 200));
+form.addEventListener(`input`, throttle(onForm, 500));
 form.addEventListener('submit', formSubmit);
 
 refreshForm();
