@@ -13,14 +13,6 @@ function onPlay(data) {
 
 var curentTime = localStorage.getItem(STORAGE_KEY);
 
-player
-  .setCurrentTime(curentTime)
-  .then(function (seconds) {})
-  .catch(function (error) {
-    switch (error.name) {
-      case 'RangeError':
-        break;
-      default:
-        break;
-    }
-  });
+if (curentTime) {
+  player.setCurrentTime(curentTime);
+}
